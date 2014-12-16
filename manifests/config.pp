@@ -38,7 +38,7 @@ class apache13::config (
                   owner   => 'root',
                   group   => 'www',
                   mode    => '0640',
-                  content => template($template),
+                  content => template("apache13/${template}"),
                 }
               }
     'hiera': {

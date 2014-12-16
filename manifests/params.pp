@@ -5,6 +5,6 @@ class apache13::params {
   $service_enable  = true
   $service_flags   = ''
   $service_name    = 'apache'
-  $templatestorage = 'hiera'
+  $templatestorage = 'puppet'
   $template        = 'httpd.conf.erb'
 }

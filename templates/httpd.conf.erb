@@ -1,0 +1,293 @@
+ServerType standalone
+LogLevel debug
+ServerRoot "/var/www"
+PidFile logs/httpd.pid
+ScoreBoardFile logs/apache_runtime_status
+Timeout 300
+KeepAlive On
+MaxKeepAliveRequests 100
+KeepAliveTimeout 15
+MinSpareServers 5
+MaxSpareServers 10
+StartServers 5
+MaxClients 150
+MaxRequestsPerChild 0
+BindAddress *
+
+# Enable fastcgi for .fcgi files
+# (If you're using a distro package for mod_fcgi, something like
+# this is probably already present)
+<IfModule mod_fastcgi.c>
+   AddHandler fastcgi-script .fcgi
+</IfModule>
+
+# "anonymous" user access to authenticated areas
+# LoadModule anon_auth_module	/usr/local/lib/apache/modules/mod_auth_anon.so
+# user authentication using Berkeley DB files
+# LoadModule db_auth_module	/usr/local/lib/apache/modules/mod_auth_db.so
+# user authentication using DBM files
+# LoadModule dbm_auth_module	/usr/local/lib/apache/modules/mod_auth_dbm.so
+# authentication using new-style MD5 Digest Authentication (experimental)
+ LoadModule digest_auth_module	/usr/local/lib/apache/modules/mod_auth_digest.so
+# CERN httpd metafile semantics
+# LoadModule cern_meta_module	/usr/local/lib/apache/modules/mod_cern_meta.so
+# configuration defines ($xxx)
+# LoadModule define_module	/usr/local/lib/apache/modules/mod_define.so
+# user authentication using old-style MD5 Digest Authentication
+ LoadModule digest_module	/usr/local/lib/apache/modules/mod_digest.so
+# generation of Expires HTTP headers according to user-specified criteria
+# LoadModule expires_module	/usr/local/lib/apache/modules/mod_expires.so
+# customization of HTTP response headers
+LoadModule headers_module	/usr/local/lib/apache/modules/mod_headers.so
+# comprehensive overview of the server configuration
+# LoadModule info_module		/usr/local/lib/apache/modules/mod_info.so
+# logging of the client user agents (deprecated in favor of mod_log_config)
+# LoadModule agent_log_module	/usr/local/lib/apache/modules/mod_log_agent.so
+# logging of referers (deprecated in favor of mod_log_config)
+# LoadModule referer_log_module	/usr/local/lib/apache/modules/mod_log_referer.so
+# determining the MIME type of a file by looking at a few bytes of its contents
+# LoadModule mime_magic_module	/usr/local/lib/apache/modules/mod_mime_magic.so
+# mmap()ing of a statically configured list of frequently requested but 
+# not changed files (experimental)
+# LoadModule mmap_static_module	/usr/local/lib/apache/modules/mod_mmap_static.so
+# rule-based rewriting engine to rewrite requested URLs on the fly
+LoadModule rewrite_module	/usr/local/lib/apache/modules/mod_rewrite.so
+# attempt to correct misspellings of URLs that users might have entered
+# LoadModule speling_module	/usr/local/lib/apache/modules/mod_speling.so
+# provides an environment variable with a unique identifier for each request
+# LoadModule unique_id_module	/usr/local/lib/apache/modules/mod_unique_id.so
+# uses cookies to provide for a clickstream log of user activity on a site
+# LoadModule usertrack_module	/usr/local/lib/apache/modules/mod_usertrack.so
+# dynamically configured mass virtual hosting
+# LoadModule vhost_alias_module	/usr/local/lib/apache/modules/mod_vhost_alias.so
+# caching proxy
+LoadModule proxy_module	/usr/local/lib/apache/modules/libproxy.so
+#LoadModule php5_module        /usr/local/lib/php/libphp5.so
+#LoadModule auth_ldap_module   /usr/local/lib/apache/modules/mod_auth_ldap.so
+#LoadModule fastcgi_module     /usr/local/lib/apache/modules/mod_fastcgi.so
+
+# 
+# Include extra module configuration files
+# 
+Include /var/www/conf/modules/*.conf
+
+
+#ExtendedStatus On
+#Port 80
+Listen 80
+<IfDefine SSL>
+Listen 443
+</IfDefine>
+User www
+Group www
+
+UseCanonicalName On
+TypesConfig conf/mime.types
+DefaultType text/plain
+<IfModule mod_mime_magic.c>
+    MIMEMagicFile conf/magic
+</IfModule>
+HostnameLookups Off
+ErrorLog logs/error_log
+LogLevel debug
+LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" combined
+LogFormat "%h %l %u %t \"%r\" %>s %b" common
+LogFormat "%{Referer}i -> %U" referer
+LogFormat "%{User-agent}i" agent
+CustomLog logs/access_log common
+#CustomLog logs/referer_log referer
+#CustomLog logs/agent_log agent
+#CustomLog logs/access_log combined
+ServerSignature Off
+Alias /icons/ "/var/www/icons/"
+
+<Directory "/var/www/htdocs">
+    Options +Includes
+    XBitHack on
+</Directory>
+<Directory "/var/www/icons">
+    Options Indexes MultiViews
+    AllowOverride None
+    Order allow,deny
+    Allow from all
+</Directory>
+<Directory "/var/www/htdocs/manual">
+    Options MultiViews
+    AllowOverride None
+    Order allow,deny
+    Allow from all
+</Directory>
+ScriptAlias /cgi-bin/ "/var/www/cgi-bin/"
+<Directory "/var/www/cgi-bin">
+    AllowOverride None
+    Options None
+    Order allow,deny
+    Allow from all
+</Directory>
+IndexOptions FancyIndexing
+AddIconByEncoding (CMP,/icons/compressed.gif) x-compress x-gzip
+AddIconByType (TXT,/icons/text.gif) text/*
+AddIconByType (IMG,/icons/image2.gif) image/*
+AddIconByType (SND,/icons/sound2.gif) audio/*
+AddIconByType (VID,/icons/movie.gif) video/*
+AddIcon /icons/binary.gif .bin .exe
+AddIcon /icons/binhex.gif .hqx
+AddIcon /icons/tar.gif .tar
+AddIcon /icons/world2.gif .wrl .wrl.gz .vrml .vrm .iv
+AddIcon /icons/compressed.gif .Z .z .tgz .gz .zip
+AddIcon /icons/a.gif .ps .ai .eps
+AddIcon /icons/layout.gif .html .shtml .htm .pdf
+AddIcon /icons/text.gif .txt
+AddIcon /icons/c.gif .c
+AddIcon /icons/p.gif .pl .py
+AddIcon /icons/f.gif .for
+AddIcon /icons/dvi.gif .dvi
+AddIcon /icons/uuencoded.gif .uu
+AddIcon /icons/script.gif .conf .sh .shar .csh .ksh .tcl
+AddIcon /icons/tex.gif .tex
+AddIcon /icons/bomb.gif core
+AddIcon /icons/back.gif ..
+AddIcon /icons/hand.right.gif README
+AddIcon /icons/folder.gif ^^DIRECTORY^^
+AddIcon /icons/blank.gif ^^BLANKICON^^
+DefaultIcon /icons/unknown.gif
+#AddDescription "GZIP compressed document" .gz
+#AddDescription "tar archive" .tar
+#AddDescription "GZIP compressed tar archive" .tgz
+ReadmeName README
+HeaderName HEADER
+IndexIgnore .??* *~ *# HEADER* README* RCS CVS *,v *,t
+#AddEncoding x-compress Z
+#AddEncoding x-gzip gz
+AddLanguage en .en
+AddLanguage fr .fr
+AddLanguage de .de
+AddLanguage da .da
+AddLanguage el .el
+AddLanguage it .it
+LanguagePriority en fr de
+AddType application/x-httpd-php .php
+#AddHandler cgi-script .cgi
+AddType text/html .shtml
+AddHandler server-parsed .shtml
+#AddHandler send-as-is asis
+#AddHandler imap-file map
+#AddHandler type-map var
+#MetaDir .web
+#MetaSuffix .meta
+BrowserMatch "Mozilla/2" nokeepalive
+BrowserMatch "MSIE 4\.0b2;" nokeepalive downgrade-1.0 force-response-1.0
+BrowserMatch "RealPlayer 4\.0" force-response-1.0
+BrowserMatch "Java/1\.0" force-response-1.0
+BrowserMatch "JDK/1\.0" force-response-1.0
+#ProxyRequests On
+#
+#<Directory proxy:*>
+#    Order deny,allow
+#    Deny from all
+#    Allow from .your_domain.com
+#</Directory>
+#ProxyVia On
+CacheRoot "/var/www/proxy"
+CacheSize 5
+CacheGcInterval 4
+CacheMaxExpire 24
+CacheLastModifiedFactor 0.1
+CacheDefaultExpire 1
+#</IfModule>
+
+<IfDefine SSL>
+AddType application/x-x509-ca-cert .crt
+AddType application/x-pkcs7-crl    .crl
+</IfDefine>
+
+<IfModule mod_ssl.c>
+SSLSessionCache         dbm:logs/ssl_scache
+SSLSessionCacheTimeout  300
+SSLMutex  sem
+SSLRandomSeed startup builtin
+SSLRandomSeed connect builtin
+SSLRandomSeed startup file:/dev/arandom  512
+SSLLog      logs/ssl_engine_log
+SSLLogLevel info
+</IfModule>
+
+NameVirtualHost <%= @fqdn %>:80
+<VirtualHost <%= @fqdn %>:80>
+ServerName <%= @fqdn %>
+DocumentRoot /var/www/htdocs
+RewriteEngine On
+RewriteCond %{QUERY_STRING} ^/SOGo(.*)
+RewriteRule https://<%= @fqdn %>/SOGo/$1	[R]
+</VirtualHost>
+
+<IfDefine SSL>
+NameVirtualHost *:443
+<VirtualHost *:443>
+ServerName <%= @fqdn %>
+DocumentRoot /var/www/htdocs
+ServerAdmin webmaster@<%= @domain %>
+ErrorLog logs/error_log
+TransferLog logs/access_log
+SSLEngine on
+SSLCertificateFile    /etc/apache/www.my-domain.de.pem
+SSLCertificateKeyFile /etc/apache/www.my-domain.de.key
+SSLCertificateChainFile /etc/apache/sub.class1.server.ca.pem
+
+Alias /SOGo.woa/WebServerResources/ \
+      /lib/sogo/www/
+Alias /SOGo/WebServerResources/ \
+      /lib/sogo/www/
+AliasMatch /SOGo/so/ControlPanel/Products/(.*)/Resources/(.*) \
+           /lib/sogo/$1.SOGo/Resources/$2
+
+<LocationMatch "^/SOGo/so/ControlPanel/Products/.*UI/Resources/.*\.(jpg|png|gif|css|js)">
+  SetHandler default-handler
+</LocationMatch>
+
+ProxyRequests Off
+SetEnv proxy-nokeepalive 1
+ProxyPreserveHost On
+
+ProxyPass /SOGo http://127.0.0.1:40000/SOGo
+ProxyPassReverse /SOGo http://127.0.0.1:40000/SOGo
+
+RequestHeader set "x-webobjects-server-port" "443"
+RequestHeader set "x-webobjects-server-name" "<%= @fqdn %>"
+RequestHeader set "x-webobjects-server-url" "https://<%= @fqdn %>"
+RequestHeader set "x-webobjects-server-protocol" "HTTP/1.0"
+RequestHeader set "x-webobjects-remote-host" "127.0.0.1"
+
+AddDefaultCharset UTF-8
+
+  RewriteEngine On
+  RewriteCond %{QUERY_STRING} ^(.*)amp;(.*)amp;(.*)amp;(.*)$
+  RewriteRule ^/(.*)$ $1?%1%2%3%4      [NE,R,L]
+  RewriteCond %{QUERY_STRING} ^(.*)amp;(.*)amp;(.*)$
+  RewriteRule ^/(.*)$ $1?%1%2%3      [NE,R,L]
+#  RewriteRule http-poll/ http://localhost:5280/http-poll/ [P]
+
+  <LocationMatch "^/OpenGroupware55*">
+  SetHandler NONE
+  </LocationMatch>
+  <LocationMatch "^/OpenGroupware*">
+  SetHandler ngobjweb-adaptor
+  SetAppPort 20000
+  </LocationMatch>
+
+  <LocationMatch ^/zidestore/*>
+    SetAppPort 21000
+    SetHandler ngobjweb-adaptor
+  </LocationMatch>
+</VirtualHost>                                  
+
+<IfModule mod_php5.c>
+        AddType application/x-httpd-php .php .phtml .php3
+        AddType application/x-httpd-php-source .phps
+# Most php configs require this
+        DirectoryIndex index.php
+</IfModule>
+
+</IfModule>
+
+</IfDefine>
