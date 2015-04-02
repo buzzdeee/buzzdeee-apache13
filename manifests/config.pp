@@ -31,6 +31,12 @@ class apache13::config (
     mode   => '0640',
     content => hiera('www.my-domain.de.key'),
   }
+  file { '/var/www/conf/modules':
+    ensure => 'directory',
+    owner  => 'root',
+    group  => 'www',
+    mode   => '0750',
+  }
 
   case $templatestorage {
     'puppet': {
