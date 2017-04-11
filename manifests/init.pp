@@ -29,7 +29,7 @@
 #
 # === Authors
 #
-# Author Name <author@domain.com>
+# Sebastian Reitenbach <sebastia@l00-bugdead-prods.de>
 #
 # === Copyright
 #
@@ -51,7 +51,7 @@ class apache13 (
     package_name   => $package_name,
   }
 
-  class { 'apache13::config': 
+  class { 'apache13::config':
     templatestorage => $templatestorage,
     template        => $template,
   }
@@ -63,7 +63,7 @@ class apache13 (
     service_flags  => $service_flags,
   }
 
-  Class['apache13::install'] -> 
-  Class['apache13::config'] ~>
-  Class['apache13::service']
+  Class['apache13::install']
+  -> Class['apache13::config']
+  ~> Class['apache13::service']
 }

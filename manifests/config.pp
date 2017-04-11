@@ -1,3 +1,5 @@
+# The class that takes care to
+# configure the service
 class apache13::config (
   $templatestorage,
   $template,
@@ -11,24 +13,24 @@ class apache13::config (
   }
 
   file { '/etc/apache/sub.class1.server.ca.pem':
-    ensure => 'present',
-    owner  => 'root',
-    group  => 'www',
-    mode   => '0640',
+    ensure  => 'present',
+    owner   => 'root',
+    group   => 'www',
+    mode    => '0640',
     content => hiera('sub.class1.server.ca.pem'),
   }
   file { '/etc/apache/www.my-domain.de.pem':
-    ensure => 'present',
-    owner  => 'root',
-    group  => 'www',
-    mode   => '0640',
+    ensure  => 'present',
+    owner   => 'root',
+    group   => 'www',
+    mode    => '0640',
     content => hiera('www.my-domain.de.pem'),
   }
   file { '/etc/apache/www.my-domain.de.key':
-    ensure => 'present',
-    owner  => 'root',
-    group  => 'www',
-    mode   => '0640',
+    ensure  => 'present',
+    owner   => 'root',
+    group   => 'www',
+    mode    => '0640',
     content => hiera('www.my-domain.de.key'),
   }
   file { '/var/www/conf/modules':
@@ -48,13 +50,13 @@ class apache13::config (
                 }
               }
     'hiera': {
-               file { '/var/www/conf/httpd.conf':
-                 owner   => 'root',
-                 group   => 'www',
-                 mode    => '0640',
-                 content => hiera($template),
-               }
-             }
+                file { '/var/www/conf/httpd.conf':
+                  owner   => 'root',
+                  group   => 'www',
+                  mode    => '0640',
+                  content => hiera($template),
+                }
+              }
     default: { fail("templatestorage must be either 'puppet' or 'hiera'") }
   }
 

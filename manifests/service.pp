@@ -1,3 +1,5 @@
+# The class that takes care
+# of the service
 class apache13::service (
   $service_ensure,
   $service_enable,

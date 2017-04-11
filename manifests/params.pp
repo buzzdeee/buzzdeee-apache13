@@ -1,3 +1,4 @@
+# The defaults for the module
 class apache13::params {
   $package_ensure  = 'installed'
   $package_name    = 'apache-httpd-openbsd'
