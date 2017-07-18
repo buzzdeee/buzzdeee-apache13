@@ -17,21 +17,21 @@ class apache13::config (
     owner   => 'root',
     group   => 'www',
     mode    => '0640',
-    content => hiera('sub.class1.server.ca.pem'),
+    content => lookup('sub.class1.server.ca.pem'),
   }
   file { '/etc/apache/www.my-domain.de.pem':
     ensure  => 'present',
     owner   => 'root',
     group   => 'www',
     mode    => '0640',
-    content => hiera('www.my-domain.de.pem'),
+    content => lookup('www.my-domain.de.pem'),
   }
   file { '/etc/apache/www.my-domain.de.key':
     ensure  => 'present',
     owner   => 'root',
     group   => 'www',
     mode    => '0640',
-    content => hiera('www.my-domain.de.key'),
+    content => lookup('www.my-domain.de.key'),
   }
   file { '/var/www/conf/modules':
     ensure => 'directory',
@@ -54,7 +54,7 @@ class apache13::config (
                   owner   => 'root',
                   group   => 'www',
                   mode    => '0640',
-                  content => hiera($template),
+                  content => lookup($template),
                 }
               }
     default: { fail("templatestorage must be either 'puppet' or 'hiera'") }
